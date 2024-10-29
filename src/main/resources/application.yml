@@ -1,0 +1,39 @@
+spring:
+  datasource:
+    url:
+    username:
+    password:
+    dirver-class-name:
+
+  sql:
+    init:
+      mode: never
+
+  jpa:
+    database-platform: org.hibernate.dialect.MYSQL8Dialect
+    open-in-view: true
+
+    hibernate:
+      ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        default_batch_fetch_size: 500
+
+  data:
+    redis:
+      port:
+      host:
+logging:
+  level:
+    org:
+      example:
+        madeinha: DEBUG
+
+      hibernate:
+        SQL: DEBUG
+
+      springframework:
+
+  pattern:
+    dateformat: yyyy-MM-dd HH:mm:ss.SSS, Asia/Seoul
