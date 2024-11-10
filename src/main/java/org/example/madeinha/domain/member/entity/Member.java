@@ -19,5 +19,9 @@ public class Member extends BaseTimeEntity {
     @Column(name = "member_id")
     private Long memberId;
 
+    private Long point;
 
+
+    @Column(length = 15)
+    private String nickname;
 }
