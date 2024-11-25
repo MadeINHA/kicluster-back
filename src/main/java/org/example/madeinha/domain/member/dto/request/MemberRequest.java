@@ -13,7 +13,6 @@ public abstract class MemberRequest {
     public static class JoinRequest {
         @NotNull
         private String nickname;
-
     }
 }
 
