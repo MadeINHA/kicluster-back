@@ -1,4 +1,4 @@
-package org.example.madeinha.domain.notification.config;
+package org.example.madeinha.global.config;
 
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
