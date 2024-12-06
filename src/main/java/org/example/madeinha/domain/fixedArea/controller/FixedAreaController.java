@@ -1,5 +1,6 @@
 package org.example.madeinha.domain.fixedArea.controller;
 
+import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.example.madeinha.domain.fixedArea.converter.FixedAreaConverter;
 import org.example.madeinha.domain.fixedArea.entity.AreaType;
@@ -23,6 +24,7 @@ public class FixedAreaController {
     private final FixedAreaConverter fixedAreaConverter;
 
     @PostMapping("/register/exist")
+    @Operation(summary = "기존 주차구역을 등록하는 api")
     public ResultResponse<RegisterList> registerExist(@RequestBody FixedAreaRegister request) {
         List<FixedArea> fixedAreaList = fixedAreaService.registerArea(request, AreaType.EXIST);
         RegisterList registerList = fixedAreaConverter.toRegisterList(fixedAreaList);
@@ -31,6 +33,7 @@ public class FixedAreaController {
     }
 
     @PostMapping("/register/road")
+    @Operation(summary = "도로 정보를 등록하는 api")
     public ResultResponse<RegisterList> registerRoad(@RequestBody FixedAreaRegister request) {
         List<FixedArea> fixedAreaList = fixedAreaService.registerArea(request, AreaType.ROAD);
         RegisterList registerList = fixedAreaConverter.toRegisterList(fixedAreaList);
@@ -39,6 +42,7 @@ public class FixedAreaController {
     }
 
     @PostMapping("/register/prohibit")
+    @Operation(summary = "기존 주차 금지 구역을 등록하는 api")
     public ResultResponse<RegisterList> registerProhibit(@RequestBody FixedAreaRegister request) {
         List<FixedArea> fixedAreaList = fixedAreaService.registerArea(request, AreaType.PROHIBIT);
         RegisterList registerList = fixedAreaConverter.toRegisterList(fixedAreaList);
@@ -47,6 +51,7 @@ public class FixedAreaController {
     }
 
     @GetMapping("/exist")
+    @Operation(summary = "기존 주차구역을 조회하는 api")
     public ResultResponse<AreaInfoByType> getExistAreaInfoByType() {
         List<FixedArea> fixedAreaByType = fixedAreaService.getFixedAreaByType(AreaType.EXIST);
         AreaInfoByType areaInfoByType = fixedAreaConverter.toAreaInfoByType(fixedAreaByType, AreaType.EXIST);
@@ -55,6 +60,7 @@ public class FixedAreaController {
     }
 
     @GetMapping("/prohibit")
+    @Operation(summary = "기존 주차 금지구역을 조회하는 api")
     public ResultResponse<AreaInfoByType> getProhibitAreaInfoByType() {
         List<FixedArea> fixedAreaByType = fixedAreaService.getFixedAreaByType(AreaType.PROHIBIT);
         AreaInfoByType areaInfoByType = fixedAreaConverter.toAreaInfoByType(fixedAreaByType, AreaType.PROHIBIT);
