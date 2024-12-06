@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package algorithm;
+
+message AlgorithmRequest{
+  string json_input = 1;
+}
+
+message AlgorithmResponse {
+  string json_output = 1;
+}
+
+service AlgorithmService{
+  rpc DbScan(AlgorithmRequest) returns (AlgorithmResponse);
+  rpc convexHull(AlgorithmRequest) returns (AlgorithmResponse);
+  rpc PointInPolygon(AlgorithmRequest) returns (AlgorithmResponse);
+}
