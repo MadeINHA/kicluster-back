@@ -6,21 +6,29 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 public abstract class KickboardRequest {
 
     @Builder
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class RegisterRequest {
+    public static class Register {
 
         @NotNull
-        private Double latitude; //위도
+        private Double lat; //위도
 
         @NotNull
-        private Double longitude; //경도
-
-
-
+        private Double lng; //경도
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class RegisterRequest {
+        List<Register> registerList;
+    }
+
 }

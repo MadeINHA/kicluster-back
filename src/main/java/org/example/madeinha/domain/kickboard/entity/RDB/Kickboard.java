@@ -11,6 +11,7 @@ import org.locationtech.jts.geom.Point;
 @Table(name = "kickboards")
 @SQLRestriction("deleted_at is NULL")
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor
@@ -28,27 +29,6 @@ public class Kickboard extends BaseTimeEntity {
 
     private Integer parkingZone; // 소속 주차구역
 
-    private Boolean border; //경계를 이루는 킥보드 인지 확인하는 것
+    private Boolean acting; //킥보드 사용 여부
 
 }
-
-/*
-
-private Long kickboardId;
-
-    @Indexed
-    private Double latitude;
-
-    @Indexed
-    private Double longitude;
-
-    @Indexed
-    private Integer clusterId;
-
-    @Indexed
-    private Integer parkingZone;
-
-    @Indexed
-    private Boolean border;
-
- */

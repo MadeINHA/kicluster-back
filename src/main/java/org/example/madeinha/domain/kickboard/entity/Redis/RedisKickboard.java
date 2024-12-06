@@ -1,6 +1,7 @@
 package org.example.madeinha.domain.kickboard.entity.Redis;
 
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
@@ -10,6 +11,7 @@ import java.io.Serializable;
 
 @Getter
 @RedisHash(value = "kickboard")
+@AllArgsConstructor
 public class RedisKickboard implements Serializable {
 
     @Id
@@ -29,22 +31,13 @@ public class RedisKickboard implements Serializable {
     private Integer parkingZone;
 
     @Indexed
-    private Boolean border;
+    private Boolean acting;
 
+    public void lentKickboard() {
+        this.acting = true;
+    }
 
-    public RedisKickboard(
-            final Long kickboardId,
-            final Double latitude,
-            final Double longitude,
-            final Integer clusterId,
-            final Integer parkingZone,
-            final Boolean border
-    ) {
-        this.kickboardId = kickboardId;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.clusterId = clusterId;
-        this.parkingZone = parkingZone;
-        this.border = border;
+    public void returnKickboard(){
+        this.acting = false;
     }
 }

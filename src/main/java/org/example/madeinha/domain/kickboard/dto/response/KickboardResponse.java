@@ -1,10 +1,13 @@
 package org.example.madeinha.domain.kickboard.dto.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public abstract class KickboardResponse {
@@ -15,8 +18,8 @@ public abstract class KickboardResponse {
     @AllArgsConstructor
     public static class KickboardInfo {
         Long kickboardId;
-        Double latitude;
-        Double longitude;
+        Double lat;
+        Double lng;
     }
 
     @Getter
@@ -31,12 +34,22 @@ public abstract class KickboardResponse {
     @Builder
     @NoArgsConstructor
     @AllArgsConstructor
+    public static class AllKickboardInfo {
+        @JsonProperty("kickboard_list")
+        List<KickboardDetailInfo> kickboardList;
+    }
+
+    @Getter
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     public static class KickboardDetailInfo{
         Long kickboardId;
-        Double latitude;
-        Double longitude;
+        Double lat;
+        Double lng;
         Integer clusterId;
         Integer parkingZone;
+        Boolean acting;
     }
 
     @Getter
@@ -44,8 +57,8 @@ public abstract class KickboardResponse {
     @NoArgsConstructor
     @AllArgsConstructor
     public static class LocationInfo {
-        Double latitude;
-        Double longitude;
+        Double lat;
+        Double lng;
     }
 
     @Getter
@@ -58,8 +71,13 @@ public abstract class KickboardResponse {
     }
 
 
-
-
-
-
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class TowModeLentInfo {
+        Long kickboardId;
+        Boolean acting;
+        LocalDateTime lentTime;
+    }
 }
