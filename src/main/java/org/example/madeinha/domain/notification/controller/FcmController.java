@@ -2,9 +2,7 @@ package org.example.madeinha.domain.notification.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.example.madeinha.domain.notification.converter.FcmConverter;
-import org.example.madeinha.domain.notification.dto.request.FcmRequest;
 import org.example.madeinha.domain.notification.dto.request.FcmRequest.FcmRequestDTO;
-import org.example.madeinha.domain.notification.dto.response.FcmResponse;
 import org.example.madeinha.domain.notification.service.FcmService;
 import org.example.madeinha.global.result.ResultResponse;
 import org.example.madeinha.global.result.code.FcmResultCode;
@@ -15,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.io.IOException;
 
-import static org.example.madeinha.domain.notification.dto.response.FcmResponse.*;
+import static org.example.madeinha.domain.notification.dto.response.FcmResponse.FcmSend;
 
 @RestController
 @RequestMapping("/fcm")

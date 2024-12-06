@@ -1,15 +1,12 @@
 package org.example.madeinha.domain.kickboard.service;
 
 import lombok.RequiredArgsConstructor;
-import org.codehaus.jackson.JsonProcessingException;
 import org.example.madeinha.domain.kickboard.dto.request.KickboardRequest;
-import org.example.madeinha.global.Json.JsonConverter;
-import org.example.madeinha.domain.kickboard.converter.KickboardConverter;
-import org.example.madeinha.global.Json.JsonDTO;
 import org.example.madeinha.domain.kickboard.entity.RDB.Kickboard;
 import org.example.madeinha.domain.kickboard.entity.Redis.RedisKickboard;
 import org.example.madeinha.domain.kickboard.repository.RDB.KickboardRepository;
 import org.example.madeinha.domain.kickboard.repository.Redis.RedisKickboardRepository;
+import org.example.madeinha.global.Json.JsonConverter;
 import org.example.madeinha.global.error.BusinessException;
 import org.example.madeinha.global.error.code.KickboardErrorCode;
 import org.locationtech.jts.geom.Coordinate;

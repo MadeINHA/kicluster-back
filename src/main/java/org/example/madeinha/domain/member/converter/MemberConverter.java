@@ -1,11 +1,10 @@
 package org.example.madeinha.domain.member.converter;
 
-import org.example.madeinha.domain.member.dto.response.MemberResponse;
 import org.example.madeinha.domain.member.entity.Member;
 import org.springframework.stereotype.Component;
 
-import static org.example.madeinha.domain.member.dto.response.MemberResponse.*;
 import static org.example.madeinha.domain.member.dto.response.MemberResponse.JoinInfo;
+import static org.example.madeinha.domain.member.dto.response.MemberResponse.MemberInfo;
 
 @Component
 public class MemberConverter {

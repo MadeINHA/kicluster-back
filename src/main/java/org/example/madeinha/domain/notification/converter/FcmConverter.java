@@ -2,12 +2,10 @@ package org.example.madeinha.domain.notification.converter;
 
 
 import org.example.madeinha.domain.member.entity.Member;
-import org.example.madeinha.domain.notification.dto.request.FcmRequest;
-import org.example.madeinha.domain.notification.dto.response.FcmResponse;
 import org.example.madeinha.domain.notification.entity.FCM;
 import org.springframework.stereotype.Component;
 
-import static org.example.madeinha.domain.notification.dto.response.FcmResponse.*;
+import static org.example.madeinha.domain.notification.dto.response.FcmResponse.FcmSend;
 
 @Component
 public class FcmConverter {

@@ -12,8 +12,9 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.example.madeinha.domain.fixedArea.dto.FixedAreaRequest.*;
-import static org.example.madeinha.domain.fixedArea.dto.FixedAreaResponse.*;
+import static org.example.madeinha.domain.fixedArea.dto.FixedAreaRequest.FixedAreaRegister;
+import static org.example.madeinha.domain.fixedArea.dto.FixedAreaResponse.AreaInfoByType;
+import static org.example.madeinha.domain.fixedArea.dto.FixedAreaResponse.RegisterList;
 
 @RestController
 @RequiredArgsConstructor

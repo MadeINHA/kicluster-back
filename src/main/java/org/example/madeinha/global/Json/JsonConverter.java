@@ -5,11 +5,8 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.example.madeinha.domain.kickboard.dto.response.KickboardResponse;
-import org.example.madeinha.domain.kickboard.entity.Redis.RedisKickboard;
 import org.example.madeinha.global.gRPC.dto.GrpcDTO;
 import org.springframework.stereotype.Component;
-
-import java.util.List;
 
 @Component
 @RequiredArgsConstructor

@@ -3,7 +3,8 @@ package org.example.madeinha.global.gRPC;
 import io.grpc.ManagedChannel;
 import org.springframework.stereotype.Component;
 
-import static org.example.madeinha.global.gRPC.AlgorithmServiceOuterClass.*;
+import static org.example.madeinha.global.gRPC.AlgorithmServiceOuterClass.AlgorithmRequest;
+import static org.example.madeinha.global.gRPC.AlgorithmServiceOuterClass.AlgorithmResponse;
 
 @Component
 public class AlgorithmServiceClient {

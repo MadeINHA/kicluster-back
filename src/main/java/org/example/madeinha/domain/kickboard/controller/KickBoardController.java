@@ -3,8 +3,6 @@ package org.example.madeinha.domain.kickboard.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.example.madeinha.domain.kickboard.converter.KickboardConverter;
-import org.example.madeinha.domain.kickboard.dto.request.KickboardRequest;
-import org.example.madeinha.domain.kickboard.dto.response.KickboardResponse;
 import org.example.madeinha.domain.kickboard.entity.RDB.Kickboard;
 import org.example.madeinha.domain.kickboard.entity.Redis.RedisKickboard;
 import org.example.madeinha.domain.kickboard.service.KickboardService;
@@ -16,7 +14,8 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.example.madeinha.domain.kickboard.dto.request.KickboardRequest.*;
+import static org.example.madeinha.domain.kickboard.dto.request.KickboardRequest.Register;
+import static org.example.madeinha.domain.kickboard.dto.request.KickboardRequest.RegisterRequest;
 import static org.example.madeinha.domain.kickboard.dto.response.KickboardResponse.*;
 
 @RestController
