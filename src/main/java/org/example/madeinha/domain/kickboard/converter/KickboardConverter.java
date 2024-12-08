@@ -21,7 +21,7 @@ public class KickboardConverter {
         return Kickboard.builder()
                 .location(geometryFactory.createPoint(coordinate))
                 .clusterId(-1)
-                .parkingZone(-1)
+                .parkingZone(3)
                 .acting(false)
                 .build();
     }
