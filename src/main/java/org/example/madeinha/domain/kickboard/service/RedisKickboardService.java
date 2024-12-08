@@ -21,8 +21,6 @@ public class RedisKickboardService {
 
     private final RedisKickboardRepository redisKickboardRepository;
     private final KickboardRepository kickboardRepository;
-    private final JsonConverter jsonConverter;
-
 
     public void register() {
         List<Kickboard> kickboardList = kickboardRepository.findAll();
@@ -58,7 +56,7 @@ public class RedisKickboardService {
     }
 
     public List<RedisKickboard> getKickboardInfoByClusterId(Integer clusterId) {
-        return redisKickboardRepository.findByClusterId(clusterId);
+        return redisKickboardRepository.findAllByClusterId(clusterId);
     }
 
     public List<RedisKickboard> getAllKickboardInfo() {
@@ -77,4 +75,5 @@ public class RedisKickboardService {
         kickboard.lentKickboard();
         return redisKickboardRepository.save(kickboard);
     }
+
 }

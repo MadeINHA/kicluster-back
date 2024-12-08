@@ -9,7 +9,7 @@ import java.util.Optional;
 public interface RedisKickboardRepository extends CrudRepository<RedisKickboard,Long> {
     Optional<RedisKickboard> findByKickboardId(Long kickboardId);
 
-    List<RedisKickboard> findByClusterId(Integer clusterId);
+    List<RedisKickboard> findAllByClusterId(Integer clusterId);
 
     Optional<RedisKickboard> findByLatitudeAndLongitude(Double lat, Double lng);
 }
