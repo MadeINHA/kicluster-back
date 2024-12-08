@@ -3,6 +3,7 @@ package org.example.madeinha.domain.fixedArea.controller;
 import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.example.madeinha.domain.fixedArea.converter.FixedAreaConverter;
+import org.example.madeinha.domain.fixedArea.dto.FixedAreaResponse;
 import org.example.madeinha.domain.fixedArea.entity.AreaType;
 import org.example.madeinha.domain.fixedArea.entity.FixedArea;
 import org.example.madeinha.domain.fixedArea.service.FixedAreaService;
@@ -67,5 +68,16 @@ public class FixedAreaController {
         AreaInfoByType areaInfoByType = fixedAreaConverter.toAreaInfoByType(fixedAreaByType, AreaType.PROHIBIT);
 
         return ResultResponse.of(FixedAreaResultCode.PROHIBIT_FIXED_AREA_INFO, areaInfoByType);
+    }
+
+    @GetMapping("/nearest")
+    @Operation(summary = "가장 가까운 기존 주차구역을 조회하는 api")
+    public ResultResponse<FixedAreaResponse.AreaInfo> getNearestExistArea(@RequestParam("lat") String s_lat, @RequestParam("lng") String s_lng) {
+        Double lat = Double.parseDouble(s_lat);
+        Double lng = Double.parseDouble(s_lng);
+        FixedArea nearestExistArea = fixedAreaService.getNearestExistArea(lat, lng);
+        FixedAreaResponse.AreaInfo areaInfo = fixedAreaConverter.toAreaInfo(nearestExistArea);
+
+        return ResultResponse.of(FixedAreaResultCode.NEAREST_EXIST_FIXED_AREA_INFO, areaInfo);
     }
 }

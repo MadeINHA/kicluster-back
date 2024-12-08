@@ -18,6 +18,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -56,4 +57,17 @@ public class FixedAreaService {
     public List<FixedArea> getFixedAreaByType(AreaType areaType) {
         return fixedAreaRepository.findAllByAreaType(areaType);
     }
+
+    public FixedArea getNearestExistArea(Double lat, Double lng) {
+        return fixedAreaRepository.findNearestExistFixedArea(lat, lng);
+    }
+
+    public AreaType getAreaTypeByCoordinate(Double lat, Double lng) {
+        Optional<FixedArea> areaContainingPoint = fixedAreaRepository.findAreaContainingPoint(lat, lng);
+        if (areaContainingPoint.isEmpty()) {
+            return AreaType.CLUSTER;
+        }
+        return areaContainingPoint.get().getAreaType();
+    }
+
 }
