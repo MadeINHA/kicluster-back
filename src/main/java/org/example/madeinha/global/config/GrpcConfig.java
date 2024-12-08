@@ -11,7 +11,7 @@ public class GrpcConfig {
     @Bean
     public ManagedChannel grpcManagedChannel() {
         return ManagedChannelBuilder
-                .forAddress("localhost", 50051)
+                .forAddress("3.36.68.148", 50051)
                 .usePlaintext()
                 .build();
     }
