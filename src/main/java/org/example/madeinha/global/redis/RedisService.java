@@ -19,4 +19,15 @@ public class RedisService {
         String key = "kickboard:" + kickboardId;
         hashOperations.put(key, "clusterId", newClusterId);
     }
+
+    public void updateCoordinate(Long kickboradId, Double lat, Double lng) {
+        String key = "kickboard:" + kickboradId;
+        hashOperations.put(key, "lat", lat);
+        hashOperations.put(key, "lng", lng);
+    }
+
+    public void updateParkingZone(Long kickboardId, Integer parkingZone) {
+        String key = "kickboard:" + kickboardId;
+        hashOperations.put(key, "parkingZone", parkingZone);
+    }
 }

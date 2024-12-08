@@ -32,7 +32,12 @@ public abstract class JsonDTO {
         Integer clusterId;
         @JsonProperty("kickboard_list")
         List<JsonKickboardInfo> kickboardList;
+        @JsonProperty("cent_lat")
+        Double centLat;
+        @JsonProperty("cent_lng")
+        Double centLng;
     }
+
 
     @Getter
     @Builder
