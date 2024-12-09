@@ -34,11 +34,4 @@ public class RedisKickboard implements Serializable {
     @Indexed
     private Boolean acting;
 
-    public void lentKickboard() {
-        this.acting = true;
-    }
-
-    public void returnKickboard(){
-        this.acting = false;
-    }
 }

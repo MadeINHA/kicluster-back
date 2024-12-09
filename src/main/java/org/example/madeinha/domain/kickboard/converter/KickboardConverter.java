@@ -3,6 +3,7 @@ package org.example.madeinha.domain.kickboard.converter;
 import lombok.RequiredArgsConstructor;
 import org.example.madeinha.domain.kickboard.entity.RDB.Kickboard;
 import org.example.madeinha.domain.kickboard.entity.Redis.RedisKickboard;
+import org.example.madeinha.domain.kickboard.repository.Redis.RedisKickboardRepository;
 import org.example.madeinha.domain.kickboard.service.RedisKickboardService;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
@@ -19,7 +20,7 @@ import static org.example.madeinha.domain.kickboard.dto.response.KickboardRespon
 public class KickboardConverter {
 
     GeometryFactory geometryFactory = new GeometryFactory();
-    private final RedisKickboardService redisKickboardService;
+    private final RedisKickboardRepository redisKickboardRepository;
 
     public Kickboard toEntity(Coordinate coordinate) {
         return Kickboard.builder()
@@ -106,7 +107,7 @@ public class KickboardConverter {
         for (RedisKickboard kickboard : kickboards) {
             if(kickboard.getParkingZone() < 2 || kickboard.getActing()) {
                 kickboard.setClusterId(-1);
-                redisKickboardService.saveKickboard(kickboard);
+                redisKickboardRepository.save(kickboard);
                 continue;
             }
             list.add(toKickboardDetailInfo(kickboard));
@@ -122,6 +123,14 @@ public class KickboardConverter {
                 .kickboardId(kickboard.getKickboardId())
                 .acting(kickboard.getActing())
                 .lentTime(LocalDateTime.now())
+                .build();
+    }
+
+    public TowModeReturnInfo toTowModeReturnInfo(Long id, Boolean check) {
+        return TowModeReturnInfo.builder()
+                .kickboardId(id)
+                .check(check)
+                .returnTime(LocalDateTime.now())
                 .build();
     }
 }

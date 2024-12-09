@@ -34,12 +34,4 @@ public interface FixedAreaRepository extends JpaRepository<FixedArea,Long> {
     )
     FixedArea findNearestExistFixedArea(@Param("lat") double lat, @Param("lng") double lng);
 
-    @Query(
-            value = "SELECT COUNT(*)>0 " +
-                    "FROM fixed_area " +
-                    "WHERE area_type = 'EXIST' " +
-                    "AND ST_Contains(zone, ST_PointFromText(CONCAT('POINT(', :longitude, ' ', :latitude, ')')))",
-            nativeQuery = true)
-    Boolean checkReturnArea(@Param("latitude") double latitude,
-                            @Param("longitude") double longitude);
 }

@@ -79,4 +79,14 @@ public abstract class KickboardResponse {
         Boolean acting;
         LocalDateTime lentTime;
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class TowModeReturnInfo {
+        Long kickboardId;
+        LocalDateTime returnTime;
+        Boolean check;
+    }
 }

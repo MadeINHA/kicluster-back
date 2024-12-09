@@ -26,7 +26,7 @@ public class HistoryService {
     private final GeometryFactory geometryFactory = new GeometryFactory();
 
     @Transactional
-    public History towLent(HistoryRequest.TowLent request) {
+    public void towLent(HistoryRequest.TowLent request) {
         List<CoordinateDTO> path = request.getPath();
         Coordinate[] coordinates = path.stream().map(
                 coordinate -> new Coordinate(coordinate.getLng(), coordinate.getLat())
@@ -36,7 +36,7 @@ public class HistoryService {
 
         History history = historyConverter.toEntity(request.getKickboard_id(), polygon);
 
-        return historyRepository.save(history);
+        historyRepository.save(history);
     }
 
     public Boolean towReturnCheck(KickboardRequest.ReturnRequest request) {
