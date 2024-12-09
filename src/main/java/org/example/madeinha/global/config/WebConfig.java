@@ -12,6 +12,7 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addMapping("/**") // 모든 엔드포인트에 대해 CORS 허용
                 .allowedOrigins(
                         "https://cartoondev.github.io",
+                        "https://dev-kicluster.vercel.app",
                         "http://localhost:3000",
                         "http://test.kij.surge.sh"
                 ) // React 서버 도메인 허용
