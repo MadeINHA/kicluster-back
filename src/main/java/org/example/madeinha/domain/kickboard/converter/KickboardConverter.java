@@ -100,6 +100,7 @@ public class KickboardConverter {
     public AllKickboardInfo toAllKickboardInfoUseIter(Iterable<RedisKickboard> kickboards) {
         List<KickboardDetailInfo> list = new ArrayList<>();
         for (RedisKickboard kickboard : kickboards) {
+            if(kickboard.getParkingZone() < 2 || kickboard.getActing()) continue;
             list.add(toKickboardDetailInfo(kickboard));
         }
 

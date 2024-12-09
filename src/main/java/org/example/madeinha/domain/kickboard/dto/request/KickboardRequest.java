@@ -31,4 +31,16 @@ public abstract class KickboardRequest {
         List<Register> registerList;
     }
 
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ReturnRequest {
+        private Long id;
+
+        private Double lat;
+
+        private Double lng;
+    }
+
 }
