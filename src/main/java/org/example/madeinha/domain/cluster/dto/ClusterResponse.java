@@ -26,5 +26,7 @@ public abstract class ClusterResponse {
     public static class ClusterEntity {
         Integer clusterId;
         List<JsonDTO.JsonKickboardInfo> kickboard_list;
+        Double cent_lat;
+        Double cent_lng;
     }
 }

@@ -12,6 +12,8 @@ public class ClusterConverter {
         return ClusterEntity.builder()
                 .clusterId(redisCluster.getCluster_id())
                 .kickboard_list(redisCluster.getKickboard_list())
+                .cent_lat(redisCluster.getCent_lat())
+                .cent_lng(redisCluster.getCent_lng())
                 .build();
     }
 }
