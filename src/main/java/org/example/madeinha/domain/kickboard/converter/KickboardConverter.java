@@ -1,7 +1,9 @@
 package org.example.madeinha.domain.kickboard.converter;
 
+import lombok.RequiredArgsConstructor;
 import org.example.madeinha.domain.kickboard.entity.RDB.Kickboard;
 import org.example.madeinha.domain.kickboard.entity.Redis.RedisKickboard;
+import org.example.madeinha.domain.kickboard.service.RedisKickboardService;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.stereotype.Component;
@@ -13,9 +15,11 @@ import java.util.List;
 import static org.example.madeinha.domain.kickboard.dto.response.KickboardResponse.*;
 
 @Component
+@RequiredArgsConstructor
 public class KickboardConverter {
 
     GeometryFactory geometryFactory = new GeometryFactory();
+    private final RedisKickboardService redisKickboardService;
 
     public Kickboard toEntity(Coordinate coordinate) {
         return Kickboard.builder()
@@ -100,7 +104,11 @@ public class KickboardConverter {
     public AllKickboardInfo toAllKickboardInfoUseIter(Iterable<RedisKickboard> kickboards) {
         List<KickboardDetailInfo> list = new ArrayList<>();
         for (RedisKickboard kickboard : kickboards) {
-            if(kickboard.getParkingZone() < 2 || kickboard.getActing()) continue;
+            if(kickboard.getParkingZone() < 2 || kickboard.getActing()) {
+                kickboard.setClusterId(-1);
+                redisKickboardService.saveKickboard(kickboard);
+                continue;
+            }
             list.add(toKickboardDetailInfo(kickboard));
         }
 

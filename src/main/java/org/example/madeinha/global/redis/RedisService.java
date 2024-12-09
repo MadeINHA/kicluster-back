@@ -15,11 +15,6 @@ public class RedisService {
         this.hashOperations = redisTemplate.opsForHash();
     }
 
-    public void updateClusterId(Long kickboardId, Integer newClusterId) {
-        String key = "kickboard:" + kickboardId;
-        hashOperations.put(key, "clusterId", newClusterId);
-    }
-
     public void updateCoordinate(Long kickboradId, Double lat, Double lng) {
         String key = "kickboard:" + kickboradId;
         hashOperations.put(key, "lat", lat);
@@ -29,5 +24,10 @@ public class RedisService {
     public void updateParkingZone(Long kickboardId, Integer parkingZone) {
         String key = "kickboard:" + kickboardId;
         hashOperations.put(key, "parkingZone", parkingZone);
+    }
+
+    public void updateActing(Long kickboardId, Boolean acting) {
+        String key = "kickboard:" + kickboardId;
+        hashOperations.put(key, "acting", acting);
     }
 }
