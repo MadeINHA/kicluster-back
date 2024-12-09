@@ -10,6 +10,4 @@ public interface RedisKickboardRepository extends CrudRepository<RedisKickboard,
     Optional<RedisKickboard> findByKickboardId(Long kickboardId);
 
     List<RedisKickboard> findAllByClusterId(Integer clusterId);
-
-    Optional<RedisKickboard> findByLatitudeAndLongitude(Double lat, Double lng);
 }

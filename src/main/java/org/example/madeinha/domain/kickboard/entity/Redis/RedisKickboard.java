@@ -3,6 +3,7 @@ package org.example.madeinha.domain.kickboard.entity.Redis;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.Setter;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.redis.core.RedisHash;
 import org.springframework.data.redis.core.index.Indexed;
@@ -18,16 +19,16 @@ public class RedisKickboard implements Serializable {
     @Indexed
     private Long kickboardId;
 
-    @Indexed
     private Double latitude;
 
-    @Indexed
     private Double longitude;
 
     @Indexed
+    @Setter
     private Integer clusterId;
 
     @Indexed
+    @Setter
     private Integer parkingZone;
 
     @Indexed
