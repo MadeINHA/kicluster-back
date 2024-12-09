@@ -37,7 +37,6 @@ public class ClusterService {
     private final RedisService redisService;
 
     @Transactional
-//    @Scheduled(fixedRate = 30000) //5초마다 실행
     public void updateKickboardInfo() throws JsonProcessingException {
         Iterable<RedisKickboard> kickboardList = redisKickboardRepository.findAll();
         KickboardResponse.AllKickboardInfo infoList = kickboardConverter.toAllKickboardInfoUseIter(kickboardList);
@@ -50,16 +49,20 @@ public class ClusterService {
         List<GrpcDTO.dbScanCluster> clusterList = dbScanResponses.getCluster_list();
 
         //redis에 바뀐 clusterId를 갱신
+        //바뀐 parkingZone 갱신
         for (GrpcDTO.dbScanCluster cluster : clusterList) {
             Integer clusterId = cluster.getCluster_id();
             List<Long> list = cluster.getKickboard_list();
-            list.forEach(
-                    kickboardId -> redisService.updateClusterId(kickboardId, clusterId)
-            );
+            for (Long id : list) {
+                redisService.updateClusterId(id, clusterId);
+                if (clusterId > 0) {
+                    redisService.updateParkingZone(id, 2);
+                } else {
+                    redisService.updateParkingZone(id, 3);
+                }
+            }
         }
-
         makePolygon();
-        System.out.println(LocalDateTime.now() + " : 알고리즘 수행");
     }
 
     @Transactional
@@ -72,7 +75,7 @@ public class ClusterService {
         List<RedisCluster> list = clusterList.stream().map(
                 cluster -> new RedisCluster(cluster.getClusterId(), cluster.getKickboardList(),cluster.getCentLat(),cluster.getCentLng())
         ).toList();
-
+        redisClusterRepository.deleteAll();
         redisClusterRepository.saveAll(list);
     }
 
