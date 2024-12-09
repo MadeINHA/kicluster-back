@@ -8,6 +8,7 @@ import org.example.madeinha.domain.kickboard.converter.KickboardConverter;
 import org.example.madeinha.domain.kickboard.dto.response.KickboardResponse;
 import org.example.madeinha.domain.kickboard.entity.Redis.RedisKickboard;
 import org.example.madeinha.domain.kickboard.repository.Redis.RedisKickboardRepository;
+import org.example.madeinha.domain.kickboard.service.RedisKickboardService;
 import org.example.madeinha.global.Json.JsonConverter;
 import org.example.madeinha.global.Json.JsonDTO;
 import org.example.madeinha.global.error.BusinessException;
@@ -31,6 +32,7 @@ public class ClusterService {
 
     private final RedisKickboardRepository redisKickboardRepository;
     private final RedisClusterRepository redisClusterRepository;
+    private final RedisKickboardService kickboardService;
     private final AlgorithmServiceClient client;
     private final KickboardConverter kickboardConverter;
     private final JsonConverter jsonConverter;
@@ -54,12 +56,14 @@ public class ClusterService {
             Integer clusterId = cluster.getCluster_id();
             List<Long> list = cluster.getKickboard_list();
             for (Long id : list) {
-                redisService.updateClusterId(id, clusterId);
+                RedisKickboard kickboard = kickboardService.findKickboardById(id);
+                kickboard.setClusterId(clusterId);
                 if (clusterId > 0) {
-                    redisService.updateParkingZone(id, 2);
+                    kickboard.setParkingZone(2);
                 } else {
-                    redisService.updateParkingZone(id, 3);
+                    kickboard.setParkingZone(3);
                 }
+                redisKickboardRepository.save(kickboard);
             }
         }
         makePolygon();
@@ -102,7 +106,8 @@ public class ClusterService {
         Integer clusterId = 0;
 
         for (RedisCluster rc : allClusterInfo) {
-            if (rc.getKickboard_list().size() >= 10) continue; // 군집에서 10대 이상이면 추천 X
+            int size = kickboardService.getKickboardInfoByClusterId(rc.getCluster_id()).size();
+            if (size >= 10) continue; // 군집에서 10대 이상이면 추천 X
 
             double cent_lat = toRadians(rc.getCent_lat());
             double cent_lng = toRadians(rc.getCent_lng());
