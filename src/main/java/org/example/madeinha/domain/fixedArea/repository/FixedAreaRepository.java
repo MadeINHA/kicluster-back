@@ -16,9 +16,10 @@ public interface FixedAreaRepository extends JpaRepository<FixedArea,Long> {
 
     List<FixedArea> findAllByAreaType(AreaType areaType);
 
-    @Query(value = "SELECT * FROM fixed_area " +
+    @Query(value = "SELECT * " +
+            "FROM fixed_area " +
             "WHERE ST_Contains(" +
-            "zone, ST_PointFromText(CONCAT('POINT(', :longitude, ' ', :latitude, ')'), 4326))" +
+            "zone, ST_PointFromText(CONCAT('POINT(', :longitude, ' ', :latitude, ')')))" +
             "LIMIT 1",
             nativeQuery = true)
     Optional<FixedArea> findAreaContainingPoint(@Param("latitude") double latitude,
@@ -26,12 +27,13 @@ public interface FixedAreaRepository extends JpaRepository<FixedArea,Long> {
 
 
     @Query(
-            value = "SELECT * FROM fixed_area " +
+            value = "SELECT * " +
+                    "FROM fixed_area " +
                     "WHERE area_type = 'EXIST' " +
-                    "ORDER BY ST_Distance(zone, ST_GeomFromText(CONCAT('POINT(', :lat, ' ', :lng, ')'))) ASC " +
+                    "ORDER BY ST_Distance(zone, ST_GeomFromText(CONCAT('POINT(', :lng, ' ', :lat, ')'))) " +
                     "LIMIT 1",
             nativeQuery = true
     )
-    FixedArea findNearestExistFixedArea(@Param("lat") double lat, @Param("lng") double lng);
+    Optional<FixedArea> findNearestExistFixedArea(@Param("lat") Double lat, @Param("lng") Double lng);
 
 }
