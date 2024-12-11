@@ -48,4 +48,8 @@ public class HistoryService {
         History history = historyRepository.findByKickboardId(id).get();
         history.delete();
     }
+
+    public Boolean isTowKickboard(Long kickboardId) {
+        return historyRepository.existsByKickboardId(kickboardId);
+    }
 }

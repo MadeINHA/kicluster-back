@@ -16,7 +16,9 @@ public interface HistoryRepository extends JpaRepository<History, Long> {
                     "WHERE kickboard_id = :kickboardId " +
                     "AND ST_Contains(zone, ST_PointFromText(CONCAT('POINT(', :longitude, ' ', :latitude, ')')))",
             nativeQuery = true)
-    Boolean checkReturn(@Param("kickboardId") Long kickboardId,
+    Long checkReturn(@Param("kickboardId") Long kickboardId,
                         @Param("latitude") double latitude,
                         @Param("longitude") double longitude);
+
+    Boolean existsByKickboardId(Long kickboardId);
 }
