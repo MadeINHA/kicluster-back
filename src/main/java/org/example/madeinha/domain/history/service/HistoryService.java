@@ -39,7 +39,7 @@ public class HistoryService {
         historyRepository.save(history);
     }
 
-    public Boolean towReturnCheck(KickboardRequest.ReturnRequest request) {
+    public Long towReturnCheck(KickboardRequest.ReturnRequest request) {
         return historyRepository.checkReturn(request.getId(), request.getLat(), request.getLng());
     }
 
