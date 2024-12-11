@@ -19,8 +19,10 @@ public class RedisKickboard implements Serializable {
     @Indexed
     private Long kickboardId;
 
+    @Setter
     private Double latitude;
 
+    @Setter
     private Double longitude;
 
     @Indexed
@@ -32,6 +34,7 @@ public class RedisKickboard implements Serializable {
     private Integer parkingZone;
 
     @Indexed
+    @Setter
     private Boolean acting;
 
 }

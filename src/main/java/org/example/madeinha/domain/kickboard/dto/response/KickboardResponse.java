@@ -89,4 +89,14 @@ public abstract class KickboardResponse {
         LocalDateTime returnTime;
         Boolean check;
     }
+
+    @Builder
+    @Getter
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class MoveInfo {
+        Long kickboardId;
+        Integer parkingZone;
+        LocalDateTime updateTime;
+    }
 }

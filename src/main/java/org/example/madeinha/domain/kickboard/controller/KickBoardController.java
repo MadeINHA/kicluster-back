@@ -8,6 +8,7 @@ import org.example.madeinha.domain.history.dto.HistoryRequest;
 import org.example.madeinha.domain.history.service.HistoryService;
 import org.example.madeinha.domain.kickboard.converter.KickboardConverter;
 import org.example.madeinha.domain.kickboard.dto.request.KickboardRequest;
+import org.example.madeinha.domain.kickboard.dto.response.KickboardResponse;
 import org.example.madeinha.domain.kickboard.entity.RDB.Kickboard;
 import org.example.madeinha.domain.kickboard.entity.Redis.RedisKickboard;
 import org.example.madeinha.domain.kickboard.service.KickboardService;
@@ -61,7 +62,7 @@ public class KickBoardController {
 
         TowModeLentInfo towModeLentInfo = kickboardConverter.toTowModeLentInfo(kickboard);
 
-        return ResultResponse.of(KickBoardResultCode.LENT_KICKBOARD_TO_TOW_MODE,towModeLentInfo);
+        return ResultResponse.of(KickBoardResultCode.LENT_KICKBOARD_TO_TOW_MODE, towModeLentInfo);
     }
 
     @PatchMapping("/tow/return")
@@ -120,5 +121,14 @@ public class KickBoardController {
         AllKickboardInfo allKickboardInfo = kickboardConverter.toAllKickboardInfoUseList(kickboardList);
 
         return ResultResponse.of(KickBoardResultCode.ALL_KCIKBOARD_INFO, allKickboardInfo);
+    }
+
+    @PatchMapping("/move")
+    @Operation(summary = "킥보드가 이동하는 것을 처리하는 api")
+    public ResultResponse<KickboardResponse.MoveInfo> moveKickboard(@RequestBody KickboardRequest.ReturnRequest request) {
+        RedisKickboard kickboard = redisKickboardService.moveKickboard(request);
+        MoveInfo moveInfo = kickboardConverter.toMoveInfo(kickboard);
+
+        return ResultResponse.of(KickBoardResultCode.MOVE_SUCCESS, moveInfo);
     }
 }

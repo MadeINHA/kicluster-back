@@ -65,7 +65,10 @@ public class RedisKickboardService {
 
     public List<RedisKickboard> getAllKickboardInfo() {
         Iterable<RedisKickboard> kickboards = redisKickboardRepository.findAll();
-        return StreamSupport.stream(kickboards.spliterator(), false).toList();
+
+        return StreamSupport.stream(kickboards.spliterator(), false)
+                .filter(kickboard -> !kickboard.getActing()) // Acting == false
+                .toList();
     }
 
     public RedisKickboard towModeLent(HistoryRequest.TowLent request) {
@@ -78,7 +81,7 @@ public class RedisKickboardService {
             throw new BusinessException(KickboardErrorCode.ALREADY_USING_KICKBOARD);
         }
 
-        redisService.updateActing(kickboardId, true); //acting을 True로 변경
+//        redisService.updateActing(kickboardId, true); //acting을 True로 변경
         historyService.towLent(request); // 사용 기록 엔티티 생성
 
         return kickboard;
@@ -89,27 +92,56 @@ public class RedisKickboardService {
         Double lat = request.getLat();
         Double lng = request.getLng();
 
-        Boolean check = historyService.towReturnCheck(request); // 지정된 구역에 주차했는지 검증 -> false면 아닌곳에 주차한 것
-
-        AreaType checkAreaType = fixedAreaService.getAreaTypeByCoordinate(lat, lng);
-
-        if (checkAreaType.equals(AreaType.EXIST)) { // 기존 주차구역에 반납했을 때
-            redisService.updateParkingZone(id, 1);
-        } else if (checkAreaType.equals(AreaType.PROHIBIT) || checkAreaType.equals(AreaType.ROAD)) {
-            redisService.updateParkingZone(id, 0);
-        } else {
-            redisService.updateParkingZone(id,2);
+        if (!historyService.isTowKickboard(id)) {
+            throw new BusinessException(KickboardErrorCode.IS_NOT_TOW_MODE);
         }
 
-        redisService.updateCoordinate(id, lat, lng); //종료한 위치로 킥보드 위치 정보 변경
-        redisService.updateActing(id, false); // 사용 중이 아닌 상태로 변경
+        Boolean check = (historyService.towReturnCheck(request) == 1); // 지정된 구역에 주차했는지 검증 -> false면 아닌곳에 주차한 것
+
+        RedisKickboard kickboard = findKickboardById(id);
+
+        AreaType areaType = checkAreaType(lat, lng);// 현재 위치가 어떤 구역인지 확인
+        if (areaType.equals(AreaType.EXIST)) {
+            kickboard.setParkingZone(1);
+        } else if (areaType.equals(AreaType.PROHIBIT) || areaType.equals(AreaType.ROAD)) {
+            kickboard.setParkingZone(0);
+        } else {
+            kickboard.setParkingZone(3);
+        }
+
+        kickboard.setLatitude(lat);
+        kickboard.setLongitude(lng);
+        kickboard.setActing(false);
+
+        redisKickboardRepository.save(kickboard);
 
         historyService.towReturn(id); //킥보드 사용 기록을 지우면서 사용종료
 
         return kickboardConverter.toTowModeReturnInfo(id, check);
     }
 
-    public void saveKickboard(RedisKickboard redisKickboard) {
-        redisKickboardRepository.save(redisKickboard);
+    public RedisKickboard moveKickboard(KickboardRequest.ReturnRequest request) {
+        Double lat = request.getLat();
+        Double lng = request.getLng();
+
+        RedisKickboard kickboard = findKickboardById(request.getId());
+
+        AreaType areaType = checkAreaType(lat, lng);//parkingzone 체크
+        if (areaType.equals(AreaType.EXIST)) {
+            kickboard.setParkingZone(1);
+        } else if (areaType.equals(AreaType.PROHIBIT) || areaType.equals(AreaType.ROAD)) {
+            kickboard.setParkingZone(0);
+        } else {
+            kickboard.setParkingZone(3);
+        }
+
+        kickboard.setLatitude(lat);
+        kickboard.setLongitude(lng);
+
+        return redisKickboardRepository.save(kickboard);
+    }
+
+    public AreaType checkAreaType(Double lat, Double lng) {
+        return fixedAreaService.getAreaTypeByCoordinate(lat, lng);
     }
 }

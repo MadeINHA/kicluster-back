@@ -4,7 +4,6 @@ import lombok.RequiredArgsConstructor;
 import org.example.madeinha.domain.kickboard.entity.RDB.Kickboard;
 import org.example.madeinha.domain.kickboard.entity.Redis.RedisKickboard;
 import org.example.madeinha.domain.kickboard.repository.Redis.RedisKickboardRepository;
-import org.example.madeinha.domain.kickboard.service.RedisKickboardService;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.GeometryFactory;
 import org.springframework.stereotype.Component;
@@ -131,6 +130,14 @@ public class KickboardConverter {
                 .kickboardId(id)
                 .check(check)
                 .returnTime(LocalDateTime.now())
+                .build();
+    }
+
+    public MoveInfo toMoveInfo(RedisKickboard redisKickboard) {
+        return MoveInfo.builder()
+                .kickboardId(redisKickboard.getKickboardId())
+                .parkingZone(redisKickboard.getParkingZone())
+                .updateTime(LocalDateTime.now())
                 .build();
     }
 }
