@@ -59,7 +59,7 @@ public class FixedAreaService {
     }
 
     public FixedArea getNearestExistArea(Double lat, Double lng) {
-        return fixedAreaRepository.findNearestExistFixedArea(lat, lng);
+        return fixedAreaRepository.findNearestExistFixedArea(lat, lng).get();
     }
 
     public AreaType getAreaTypeByCoordinate(Double lat, Double lng) {
