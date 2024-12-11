@@ -60,12 +60,12 @@ public class KickboardConverter {
                 .build();
     }
 
-    public KickboardDetailInfo toKickboardDetailInfo(RedisKickboard redisKickboard) {
+    public KickboardDetailInfo toDbScanInput(RedisKickboard redisKickboard) {
         return KickboardDetailInfo.builder()
                 .kickboardId(redisKickboard.getKickboardId())
                 .lng(redisKickboard.getLongitude())
                 .lat(redisKickboard.getLatitude())
-                .clusterId(redisKickboard.getClusterId())
+                .clusterId(-1)
                 .parkingZone(redisKickboard.getParkingZone())
                 .acting(redisKickboard.getActing())
                 .build();
@@ -109,7 +109,7 @@ public class KickboardConverter {
                 redisKickboardRepository.save(kickboard);
                 continue;
             }
-            list.add(toKickboardDetailInfo(kickboard));
+            list.add(toDbScanInput(kickboard));
         }
 
         return AllKickboardInfo.builder()

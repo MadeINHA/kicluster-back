@@ -5,7 +5,6 @@ import io.swagger.v3.oas.annotations.Operation;
 import lombok.RequiredArgsConstructor;
 import org.example.madeinha.domain.cluster.service.ClusterService;
 import org.example.madeinha.domain.history.dto.HistoryRequest;
-import org.example.madeinha.domain.history.service.HistoryService;
 import org.example.madeinha.domain.kickboard.converter.KickboardConverter;
 import org.example.madeinha.domain.kickboard.dto.request.KickboardRequest;
 import org.example.madeinha.domain.kickboard.dto.response.KickboardResponse;
@@ -20,7 +19,6 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-import static org.example.madeinha.domain.kickboard.dto.request.KickboardRequest.Register;
 import static org.example.madeinha.domain.kickboard.dto.request.KickboardRequest.RegisterRequest;
 import static org.example.madeinha.domain.kickboard.dto.response.KickboardResponse.*;
 
@@ -81,7 +79,7 @@ public class KickBoardController {
     public ResultResponse<KickboardDetailInfo> getDetailInfo(@PathVariable("kickboardId") Long kickboardId) {
 
         RedisKickboard kickboard = redisKickboardService.findKickboardById(kickboardId);
-        KickboardDetailInfo kickboardDetailInfo = kickboardConverter.toKickboardDetailInfo(kickboard);
+        KickboardDetailInfo kickboardDetailInfo = kickboardConverter.toDbScanInput(kickboard);
 
         return ResultResponse.of(KickBoardResultCode.KICKBOARD_DETAIL_INFO, kickboardDetailInfo);
     }

@@ -81,7 +81,10 @@ public class RedisKickboardService {
             throw new BusinessException(KickboardErrorCode.ALREADY_USING_KICKBOARD);
         }
 
-//        redisService.updateActing(kickboardId, true); //acting을 True로 변경
+//        kickboard.setActing(true);
+        kickboard.setClusterId(-1);
+        redisKickboardRepository.save(kickboard);
+
         historyService.towLent(request); // 사용 기록 엔티티 생성
 
         return kickboard;
@@ -137,6 +140,7 @@ public class RedisKickboardService {
 
         kickboard.setLatitude(lat);
         kickboard.setLongitude(lng);
+        kickboard.setClusterId(-1);
 
         return redisKickboardRepository.save(kickboard);
     }
