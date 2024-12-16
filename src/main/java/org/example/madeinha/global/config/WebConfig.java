@@ -14,7 +14,7 @@ public class WebConfig implements WebMvcConfigurer {
                         "http://dev.kicluster.surge.sh",
                         "http://localhost:3000"
                 ) // React 서버 도메인 허용
-                .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP 메서드
+                .allowedMethods("GET", "POST", "PATCH", "PUT", "DELETE", "OPTIONS") // 허용할 HTTP 메서드
                 .allowedHeaders("*") // 모든 헤더 허용
                 .allowCredentials(true); // 쿠키 및 인증 정보 허용
     }
