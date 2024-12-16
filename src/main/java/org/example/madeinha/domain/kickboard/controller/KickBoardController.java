@@ -63,17 +63,6 @@ public class KickBoardController {
         return ResultResponse.of(KickBoardResultCode.LENT_KICKBOARD_TO_TOW_MODE, towModeLentInfo);
     }
 
-    @PatchMapping("/tow/return")
-    @Operation(summary = "견인모드에서 킥보드를 반납하는 api", description = "check가 true이면 정상반납, false이면 다른 장소에 반납")
-    public ResultResponse<TowModeReturnInfo> towModeReturn(@RequestBody KickboardRequest.ReturnRequest request) throws JsonProcessingException {
-
-        TowModeReturnInfo towModeReturnInfo = redisKickboardService.towModeReturn(request);
-        clusterService.updateKickboardInfo(); // 반납후 상태를 가지고 다시 알고리즘 수행해서 db에 반영
-
-        return ResultResponse.of(KickBoardResultCode.RETURN_KICKBOARD, towModeReturnInfo);
-
-    }
-
     @GetMapping("/info/{kickboardId}")
     @Operation(summary = "특정 킥보드의 정보를 조회하는 api", description = "특정 킥보드의 모든 정보를 반환해주는 api이며 PathVariable로 조회하고 싶은 킥보드 id를 넣으면 됨")
     public ResultResponse<KickboardDetailInfo> getDetailInfo(@PathVariable("kickboardId") Long kickboardId) {
@@ -108,7 +97,6 @@ public class KickBoardController {
     public ResultResponse<AllKickboardLocationInfo> getAllKickboardLocationInfo() {
         List<RedisKickboard> kickboardList = redisKickboardService.getAllKickboardInfo();
         AllKickboardLocationInfo allkickboardLocationInfo = kickboardConverter.toAllkickboardLocationInfo(kickboardList);
-
         return ResultResponse.of(KickBoardResultCode.ALL_KICKBOARD_LOCATION_INFO, allkickboardLocationInfo);
     }
 
@@ -121,12 +109,38 @@ public class KickBoardController {
         return ResultResponse.of(KickBoardResultCode.ALL_KCIKBOARD_INFO, allKickboardInfo);
     }
 
-    @PatchMapping("/move")
+    @PostMapping("/move/check")
+    public ResultResponse<Boolean> checkMoveKickboard(@RequestBody KickboardRequest.ReturnRequest request) {
+        Boolean check = redisKickboardService.moveReturnCheck(request);
+        return ResultResponse.of(KickBoardResultCode.MOVE_RETURN_CHECK, check);
+    }
+
+    @PatchMapping("/move/return")
     @Operation(summary = "킥보드가 이동하는 것을 처리하는 api")
     public ResultResponse<KickboardResponse.MoveInfo> moveKickboard(@RequestBody KickboardRequest.ReturnRequest request) {
-        RedisKickboard kickboard = redisKickboardService.moveKickboard(request);
+        RedisKickboard kickboard = redisKickboardService.moveReturn(request);
         MoveInfo moveInfo = kickboardConverter.toMoveInfo(kickboard);
 
         return ResultResponse.of(KickBoardResultCode.MOVE_SUCCESS, moveInfo);
+    }
+
+    @PostMapping("/tow/check")
+    public ResultResponse<Boolean> towModeReturnCheck(@RequestBody KickboardRequest.ReturnRequest request) {
+        Boolean check = redisKickboardService.towModeReturnCheck(request);
+        return ResultResponse.of(KickBoardResultCode.TOW_RETURN_CHECK, check);
+    }
+
+    @PatchMapping("/tow/return")
+    @Operation(summary = "킥보드를 반납하는 api", description = "")
+    public ResultResponse<ReturnInfo> returnKickboard(@RequestBody KickboardRequest.ReturnRequest request) {
+        ReturnInfo towModeReturnInfo = redisKickboardService.towModeReturn(request);
+
+        return ResultResponse.of(KickBoardResultCode.RETURN_KICKBOARD, towModeReturnInfo);
+    }
+
+    @GetMapping("/random-move")
+    public ResultResponse<List<Long>> randomMove() {
+        List<Long> moveIdList = redisKickboardService.randomMove();
+        return ResultResponse.of(KickBoardResultCode.MOVE_SUCCESS, moveIdList);
     }
 }

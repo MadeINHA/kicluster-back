@@ -17,6 +17,8 @@ public enum KickBoardResultCode implements ResultCode {
     LENT_KICKBOARD_TO_TOW_MODE(200, "SK006", "견인모드를 위한 킥보드 대여에 성공하였습니다."),
     RETURN_KICKBOARD(200, "SK007", "견인 모드 킥보드 반납이 완료되었습니다."),
     MOVE_SUCCESS(200, "SK008", "킥보드 이동에 성공하였습니다."),
+    TOW_RETURN_CHECK(200, "SK009", "견인 주차 판정을 성공하였습니다."),
+    MOVE_RETURN_CHECK(200, "SK010", "주행 주차 판정을 성공하였습니다."),
     ;
     private final int status;
     private final String code;

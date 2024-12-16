@@ -1,6 +1,8 @@
 package org.example.madeinha.domain.kickboard.service;
 
 import lombok.RequiredArgsConstructor;
+import org.example.madeinha.domain.Location.Location;
+import org.example.madeinha.domain.Location.LocationRepository;
 import org.example.madeinha.domain.fixedArea.entity.AreaType;
 import org.example.madeinha.domain.fixedArea.service.FixedAreaService;
 import org.example.madeinha.domain.history.dto.HistoryRequest;
@@ -12,13 +14,13 @@ import org.example.madeinha.domain.kickboard.entity.RDB.Kickboard;
 import org.example.madeinha.domain.kickboard.entity.Redis.RedisKickboard;
 import org.example.madeinha.domain.kickboard.repository.RDB.KickboardRepository;
 import org.example.madeinha.domain.kickboard.repository.Redis.RedisKickboardRepository;
+import org.example.madeinha.domain.notification.service.SSEService;
 import org.example.madeinha.global.error.BusinessException;
 import org.example.madeinha.global.error.code.KickboardErrorCode;
-import org.example.madeinha.global.redis.RedisService;
 import org.locationtech.jts.geom.Coordinate;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.*;
 import java.util.stream.StreamSupport;
 
 @Service
@@ -28,9 +30,10 @@ public class RedisKickboardService {
     private final RedisKickboardRepository redisKickboardRepository;
     private final KickboardRepository kickboardRepository;
     private final FixedAreaService fixedAreaService;
-    private final RedisService redisService;
+    private final SSEService sseService;
     private final HistoryService historyService;
     private final KickboardConverter kickboardConverter;
+    private final LocationRepository locationRepository;
 
     public void register() {
         List<Kickboard> kickboardList = kickboardRepository.findAll();
@@ -81,7 +84,7 @@ public class RedisKickboardService {
             throw new BusinessException(KickboardErrorCode.ALREADY_USING_KICKBOARD);
         }
 
-//        kickboard.setActing(true);
+        kickboard.setActing(true);
         kickboard.setClusterId(-1);
         redisKickboardRepository.save(kickboard);
 
@@ -90,62 +93,90 @@ public class RedisKickboardService {
         return kickboard;
     }
 
-    public KickboardResponse.TowModeReturnInfo towModeReturn(KickboardRequest.ReturnRequest request) {
+    public KickboardResponse.ReturnInfo towModeReturn(KickboardRequest.ReturnRequest request) {
         Long id = request.getId();
         Double lat = request.getLat();
         Double lng = request.getLng();
 
-        if (!historyService.isTowKickboard(id)) {
-            throw new BusinessException(KickboardErrorCode.IS_NOT_TOW_MODE);
-        }
-
-        Boolean check = (historyService.towReturnCheck(request) == 1); // 지정된 구역에 주차했는지 검증 -> false면 아닌곳에 주차한 것
-
-        RedisKickboard kickboard = findKickboardById(id);
-
         AreaType areaType = checkAreaType(lat, lng);// 현재 위치가 어떤 구역인지 확인
-        if (areaType.equals(AreaType.EXIST)) {
-            kickboard.setParkingZone(1);
-        } else if (areaType.equals(AreaType.PROHIBIT) || areaType.equals(AreaType.ROAD)) {
-            kickboard.setParkingZone(0);
-        } else {
-            kickboard.setParkingZone(3);
-        }
-
-        kickboard.setLatitude(lat);
-        kickboard.setLongitude(lng);
-        kickboard.setActing(false);
-
-        redisKickboardRepository.save(kickboard);
+        RedisKickboard kickboard = returnKickboard(request, areaType);
 
         historyService.towReturn(id); //킥보드 사용 기록을 지우면서 사용종료
 
-        return kickboardConverter.toTowModeReturnInfo(id, check);
+        return kickboardConverter.toReturnInfo(id);
     }
 
-    public RedisKickboard moveKickboard(KickboardRequest.ReturnRequest request) {
+    public Boolean towModeReturnCheck(KickboardRequest.ReturnRequest request) {
+        Long id = request.getId();
+
+        if (!historyService.isTowKickboard(id)) { //견인 모드로 빌린 킥보드인지 확인
+            throw new BusinessException(KickboardErrorCode.IS_NOT_TOW_MODE);
+        }
+
+        return (historyService.towReturnCheck(request) == 1); // 지정된 구역에 주차했는지 검증 -> false면 아닌곳에 주차한 것
+    }
+
+    public RedisKickboard moveReturn(KickboardRequest.ReturnRequest request) {
         Double lat = request.getLat();
         Double lng = request.getLng();
 
+        AreaType areaType = checkAreaType(lat, lng);//parkingzone 체크
+
+        return returnKickboard(request, areaType);
+    }
+
+    public Boolean moveReturnCheck(KickboardRequest.ReturnRequest request) {
+        AreaType areaType = checkAreaType(request.getLat(), request.getLng());
+        if (areaType.equals(AreaType.PROHIBIT) || areaType.equals(AreaType.ROAD)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    public RedisKickboard returnKickboard(KickboardRequest.ReturnRequest request, AreaType areaType) {
         RedisKickboard kickboard = findKickboardById(request.getId());
 
-        AreaType areaType = checkAreaType(lat, lng);//parkingzone 체크
+        kickboard.setLongitude(request.getLng());
+        kickboard.setLatitude(request.getLat());
+        kickboard.setClusterId(-1);
+        kickboard.setActing(false);
         if (areaType.equals(AreaType.EXIST)) {
             kickboard.setParkingZone(1);
         } else if (areaType.equals(AreaType.PROHIBIT) || areaType.equals(AreaType.ROAD)) {
+            sseService.broadcastNotification("불량 주차된 킥보드가 감지되었습니다.");
             kickboard.setParkingZone(0);
         } else {
             kickboard.setParkingZone(3);
         }
-
-        kickboard.setLatitude(lat);
-        kickboard.setLongitude(lng);
-        kickboard.setClusterId(-1);
 
         return redisKickboardRepository.save(kickboard);
     }
 
     public AreaType checkAreaType(Double lat, Double lng) {
         return fixedAreaService.getAreaTypeByCoordinate(lat, lng);
+    }
+
+    public List<Long> randomMove() {
+        Random random = new Random();
+        Set<Long> randomSet = new HashSet<>();
+        // 중복되지 않는 숫자 뽑기
+        while (randomSet.size() < 21) {
+            Long randomNumber = 1 + (long) (random.nextDouble() * (355));
+            randomSet.add(randomNumber);
+        }
+        ArrayList<Long> longs = new ArrayList<>(randomSet);
+
+        List<Location> all = locationRepository.findAll();
+        Collections.shuffle(all);
+        int temp = 0;
+        for (Long l : longs) {
+            RedisKickboard kickboard = findKickboardById(l);
+            kickboard.setLatitude(all.get(temp).getLat());
+            kickboard.setLongitude(all.get(temp).getLng());
+            redisKickboardRepository.save(kickboard);
+            temp++;
+        }
+        return longs;
     }
 }

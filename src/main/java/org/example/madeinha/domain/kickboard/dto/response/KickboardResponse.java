@@ -84,10 +84,9 @@ public abstract class KickboardResponse {
     @Getter
     @AllArgsConstructor
     @NoArgsConstructor
-    public static class TowModeReturnInfo {
+    public static class ReturnInfo {
         Long kickboardId;
         LocalDateTime returnTime;
-        Boolean check;
     }
 
     @Builder

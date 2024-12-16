@@ -5,7 +5,7 @@ import org.example.madeinha.domain.notification.converter.FcmConverter;
 import org.example.madeinha.domain.notification.dto.request.FcmRequest.FcmRequestDTO;
 import org.example.madeinha.domain.notification.service.FcmService;
 import org.example.madeinha.global.result.ResultResponse;
-import org.example.madeinha.global.result.code.FcmResultCode;
+import org.example.madeinha.global.result.code.NotificationResultCode;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,7 +31,7 @@ FcmController {
                 request.getTitle(),
                 request.getBody()
         );
-        return ResultResponse.of(FcmResultCode.MESSAGE_SEND,
+        return ResultResponse.of(NotificationResultCode.MESSAGE_SEND,
                 fcmConverter.toFcmSend(request.getTargetToken(), request.getTitle(), request.getBody()));
     }
 }

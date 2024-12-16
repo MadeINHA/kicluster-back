@@ -125,10 +125,9 @@ public class KickboardConverter {
                 .build();
     }
 
-    public TowModeReturnInfo toTowModeReturnInfo(Long id, Boolean check) {
-        return TowModeReturnInfo.builder()
+    public ReturnInfo toReturnInfo(Long id) {
+        return ReturnInfo.builder()
                 .kickboardId(id)
-                .check(check)
                 .returnTime(LocalDateTime.now())
                 .build();
     }
